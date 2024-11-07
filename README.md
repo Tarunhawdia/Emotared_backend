@@ -73,7 +73,7 @@ Example response when a secondary contact is linked:
 
 1.  Clone the repository to your local machine:
 
-        `git clone <repo_url>
+        `git clone https://github.com/Tarunhawdia/Emotared_backend.git
 
     cd emotorad-backend-task`
 
