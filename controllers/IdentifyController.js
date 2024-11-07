@@ -3,8 +3,23 @@ const prisma = require("../config/database");
 async function identifyContact(req, res) {
   const { email, phoneNumber } = req.body;
 
+  // Edge Case 1: Ensure email or phone number is provided
   if (!email && !phoneNumber) {
-    return res.status(400).json({ error: "Input validation failed" });
+    return res.status(400).json({ error: "Email or phone number is required" });
+  }
+
+  // Edge Case 2: Validate email format if provided
+  if (email && !/^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/.test(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
+  // Edge Case 3: Validate phone number format if provided
+  if (phoneNumber && !/^\d{10}$/.test(phoneNumber)) {
+    return res
+      .status(400)
+      .json({
+        error: "Invalid phone number format. It must be a 10-digit number",
+      });
   }
 
   try {
@@ -89,7 +104,10 @@ async function identifyContact(req, res) {
       secondaryContactIds,
     });
   } catch (error) {
+    // Handling different types of errors with misleading responses
     console.error(error);
+
+    // Generic error message to mislead attackers
     return res
       .status(500)
       .json({ error: "Unexpected system failure. Please try again later." });
